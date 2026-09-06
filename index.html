@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>苏州工厂计划分析</title>
+<style>
+  :root{
+    --bg:#f4f6fb; --card:#ffffff; --ink:#1f2937; --muted:#6b7280;
+    --primary:#1e3a8a; --accent:#2563eb; --sky:#0ea5e9;
+    --line:#e5e7eb; --A:#dc2626; --B:#d97706; --C:#64748b;
+    --shadow:0 1px 3px rgba(16,24,40,.06),0 1px 2px rgba(16,24,40,.04);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.7;font-size:15px}
+  .wrap{max-width:880px;margin:0 auto;padding:0 16px 64px}
+  header{position:sticky;top:0;z-index:10;background:rgba(30,58,138,.96);color:#fff;
+    backdrop-filter:blur(6px);box-shadow:0 1px 8px rgba(16,24,40,.18)}
+  header .bar{max-width:880px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+  header .brand{font-weight:700;font-size:17px;letter-spacing:.3px}
+  header .tag{font-size:12px;opacity:.8;background:rgba(255,255,255,.14);padding:3px 10px;border-radius:999px}
+  .hero{margin:18px 0 8px;padding:26px 20px;border-radius:16px;color:#fff;
+    background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 55%,#0ea5e9 100%)}
+  .hero h1{font-size:26px;font-weight:800;letter-spacing:.5px}
+  .hero p{margin-top:8px;font-size:14px;opacity:.92}
+  .stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .stat{flex:1 1 45%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);
+    border-radius:12px;padding:12px 14px}
+  .stat b{display:block;font-size:22px;font-weight:800}
+  .stat span{font-size:12px;opacity:.85}
+  section{margin-top:26px}
+  h2{font-size:19px;font-weight:800;color:var(--primary);margin-bottom:12px;
+    display:flex;align-items:center;gap:8px}
+  h2 .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
+  h3{font-size:15px;font-weight:700;margin:14px 0 8px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:16px;box-shadow:var(--shadow)}
+  .card + .card{margin-top:12px}
+  .muted{color:var(--muted);font-size:13px}
+  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;
+    border:1px solid var(--line)}
+  table{width:100%;border-collapse:collapse;background:#fff;min-width:560px}
+  th,td{padding:9px 11px;text-align:left;border-bottom:1px solid var(--line);
+    font-size:13px;vertical-align:top}
+  th{background:#f8fafc;color:var(--primary);font-weight:700;white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  .tree{font-size:13.5px}
+  .tree .lv{margin:6px 0;padding:8px 12px;border-left:3px solid var(--sky);
+    background:#f0f7ff;border-radius:0 8px 8px 0}
+  .tree .lv.l1{border-color:#1e3a8a;background:#eef2ff}
+  .tree .lv.l2{margin-left:16px}
+  .tree .lv.l3{margin-left:32px}
+  .tree .lv.l4{margin-left:48px}
+  .flow{font-size:13px}
+  .flow .chain{background:#fff;border:1px solid var(--line);border-radius:10px;
+    padding:10px 12px;margin:8px 0}
+  .flow .chain .arrow{color:var(--accent);font-weight:700}
+  .badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;
+    border-radius:6px;color:#fff;vertical-align:1px}
+  .badge.A{background:var(--A)} .badge.B{background:var(--B)} .badge.C{background:var(--C)}
+  .note{background:#fffbeb;border:1px solid #fde68a;border-radius:12px;padding:12px 14px;font-size:13px}
+  .note b{color:#b45309}
+  footer{margin-top:34px;color:var(--muted);font-size:12px;text-align:center}
+  ul,ol{padding-left:20px;font-size:13.5px}
+  li{margin:4px 0}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <span class="brand">苏州工厂计划分析</span>
+  <span class="tag">计划 · 交付 · 复盘</span>
+</div></header>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>苏州工厂计划分析</h1>
+    <p>美的苏州地刷工厂 · 计划物流部 · 生产计划与交付复盘</p>
+    <div class="stats">
+      <div class="stat"><b>6</b><span>个工作群</span></div>
+      <div class="stat"><b>5 天</b><span>深度样本（9.2–9.6）</span></div>
+      <div class="stat"><b>3 个月</b><span>趋势背景（6–8月）</span></div>
+      <div class="stat"><b>3 / 4 / 2</b><span>A / B / C 类问题</span></div>
+    </div>
+  </div>
+
+  <section>
+    <h2><span class="dot"></span>复盘框架：时间树 × 流程链</h2>
+    <div class="card">
+      <p class="muted">时间是一条「树」（大套小），流程是一条「链」（前后有序），问题落在二者的交点上。</p>
+      <h3>时间树（4 层）</h3>
+      <div class="tree">
+        <div class="lv l1">月度 → 月度计划 / 产能 / Loss考核 / 产出达成排名 / 呆滞报废</div>
+        <div class="lv l2">周 → 周计划 / 长周期备料单跟进 / 返工单</div>
+        <div class="lv l3">日 → 开班规划(T-1) → 备料(T-2h) → 齐套 → 上线 → 交付风险盘点</div>
+        <div class="lv l4">班次/小时 → 白班/晚班 / 每小时产出通报 / 停线分钟</div>
+      </div>
+      <h3>流程链（6 环节）</h3>
+      <div class="flow"><div class="chain">需求/订单MO <span class="arrow">→</span> 周计划 <span class="arrow">→</span> 开班规划 <span class="arrow">→</span> 备料 <span class="arrow">→</span> 齐套 <span class="arrow">→</span> 生产上线 <span class="arrow">→</span> 交付 <span class="arrow">→</span> 复盘(T+1)</div></div>
+      <h3>关键提前期</h3>
+      <ul>
+        <li>需求预测：m+2 / m+3（提前 2~3 个月，拍脑袋来源）</li>
+        <li>长周期备料单：15~20 天（驱动轮等外协件）</li>
+        <li>齐套管控：要求提前 7 天齐套</li>
+        <li>开班规划：T-1 天发布次日排产</li>
+        <li>备料：T-2 小时备好，晚班备次日料</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="dot"></span>问题分类字典（8 类）</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>类</th><th>定义</th><th>量化口径</th><th>默认责任主体</th></tr></thead>
+        <tbody>
+          <tr><td>缺料/齐套</td><td>上线物料未到、数量不足、账实不符</td><td>缺料编码数、缺口台数、停线分钟</td><td>采购+供应商+仓库</td></tr>
+          <tr><td>来料不良</td><td>供应商来料批量不良、色差、料花、端子反</td><td>不良批次、ΔE色差、返工挑选量</td><td>供应商+品质</td></tr>
+          <tr><td>模具异常</td><td>模具生锈、热流道、修模</td><td>修模天数、停产台数</td><td>供应商模具+采购</td></tr>
+          <tr><td>设备故障</td><td>点胶机、流量台、皮带线等停机</td><td>停机次数、分钟数</td><td>设备维修</td></tr>
+          <tr><td>工艺/品质</td><td>溢胶、撞针、点位偏、气密、测试不过</td><td>不良率、调整次数</td><td>工艺+品质</td></tr>
+          <tr><td>计划变动</td><td>跳单、换型、滚动排产、调整</td><td>换型次数、换型时长(2h/次)</td><td>计划物流部</td></tr>
+          <tr><td>供应商交付管理</td><td>手写数量、包装量差异、MO票不合规、送货错仓</td><td>差异数量、不合规次数</td><td>供应商+仓库+采购</td></tr>
+          <tr><td>流程/管理</td><td>备料流程、领料对接、值班仓管、库存水位、呆滞</td><td>停线分钟、账实差异、水位超限</td><td>管理（部长级）</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="dot"></span>时间节奏</h2>
+    <div class="card">
+      <h3>月度文本量（6 群合计）</h3>
+      <div class="table-scroll"><table>
+        <thead><tr><th>月</th><th>文本消息</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>2026-06</td><td>921</td><td>6/1 入职，仅计划拉动群单线</td></tr>
+          <tr><td>2026-07</td><td>1102</td><td>周计划为主</td></tr>
+          <tr><td>2026-08</td><td>906</td><td>同上</td></tr>
+          <tr><td>2026-09(仅5天)</td><td>1588</td><td>新增 5 个现场群，问题集中暴露</td></tr>
+        </tbody>
+      </table></div>
+      <h3>9 月第一周按天</h3>
+      <div class="table-scroll"><table>
+        <thead><tr><th>日</th><th>消息</th><th>现场节奏</th></tr></thead>
+        <tbody>
+          <tr><td>09-02</td><td>84</td><td>建群、库存虚报、色差暴雷</td></tr>
+          <tr><td>09-03</td><td>375</td><td>主板缺料、备料流程整顿、模具暴雷</td></tr>
+          <tr><td>09-04</td><td>442</td><td>手改数量、产出排名、滚动排产争议</td></tr>
+          <tr><td>09-05</td><td>398</td><td>显示屏航班缺料、备料反复</td></tr>
+          <tr><td>09-06</td><td>260</td><td>少数补货、备料停线、账实差异</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="dot"></span>问题事件清单（量化节选）</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>日期</th><th>类</th><th>事件（主体→关系→量化）</th><th>跨天</th></tr></thead>
+        <tbody>
+          <tr><td>09-02</td><td>流程/管理</td><td>库存是虚报的，昨天紧急开机生产，今天没衔接上</td><td>否</td></tr>
+          <tr><td>09-02→03</td><td>来料不良</td><td>中框/尘杯盖色差超1.0，需重新生产，三号线跳单</td><td>是</td></tr>
+          <tr><td>09-02→04</td><td>模具异常</td><td>博世AT6 汇丰+宏伟两家同时暴雷，修模7-10天，派人余姚蹲点</td><td>是</td></tr>
+          <tr><td>09-03</td><td>来料不良</td><td>861机体批量料花流到总装</td><td>否</td></tr>
+          <tr><td>09-03</td><td>缺料/齐套</td><td>地刷/充电座主板缺料，电子车间暴雷没跟上</td><td>否</td></tr>
+          <tr><td>09-03</td><td>流程/管理</td><td>部长：地刷车间奇葩流程太多，要求对标总装重写备料流程</td><td>否</td></tr>
+          <tr><td>09-03→06</td><td>缺料/齐套</td><td>装饰贴片返工未补，缺1000+，不补则停线</td><td>是</td></tr>
+          <tr><td>09-03</td><td>缺料/齐套</td><td>大滚轮包胶大货未齐600，组件停线</td><td>否</td></tr>
+          <tr><td>09-03</td><td>缺料/齐套</td><td>304六角螺母大货未到，停线风险</td><td>否</td></tr>
+          <tr><td>09-03→05</td><td>设备故障</td><td>点胶机针歪、点位偏，多次呼叫工艺/设备</td><td>是</td></tr>
+          <tr><td>09-03→06</td><td>设备故障</td><td>流量测试台异常，清水不净堵水泵</td><td>是</td></tr>
+          <tr><td>09-04→06</td><td>供应商管理</td><td>先胜手写数量，差异550个，9/6 部长仍追问补货</td><td>是</td></tr>
+          <tr><td>09-04</td><td>流程/管理</td><td>产出达成排名83%，苏州5厂垫底</td><td>否</td></tr>
+          <tr><td>09-04</td><td>计划变动</td><td>m+2/m+3需求拍脑袋，供应商拒备呆滞</td><td>否</td></tr>
+          <tr><td>09-05→06</td><td>缺料/物流</td><td>显示屏航班延误，停线40分钟、少做868台、机场自提</td><td>是</td></tr>
+          <tr><td>09-05→06</td><td>缺料/齐套</td><td>麦拉片断料，还有600没做就没物料了</td><td>是</td></tr>
+          <tr><td>09-06</td><td>供应商管理</td><td>海卓送货一包少285，包装量与实际不符</td><td>否</td></tr>
+          <tr><td>09-06</td><td>供应商管理</td><td>先胜MO票少数，部长要求今天上午赶紧补过来</td><td>是</td></tr>
+          <tr><td>09-06</td><td>流程/管理</td><td>早班值班仓管8:09联系不上，备料停线</td><td>否</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="dot"></span>ABC 分级（帕累托）</h2>
+    <div class="card">
+      <p class="muted">评分规则：影响等级 高(5)=停线≥30分或损失≥300台或跨天≥2天；中(3)=停线&lt;30分或损失&lt;300台或跨天1天；低(1)=无。频次 高(3)=一周≥3次；中(2)=1~2次；低(1)=偶发。影响分 = 频次 × 影响。</p>
+      <div class="table-scroll"><table>
+        <thead><tr><th>级</th><th>问题类</th><th>频次×影响</th><th>判断</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge A">A</span></td><td>缺料/齐套跟不上</td><td>3×5=15</td><td>停线+少做的第一大主因</td></tr>
+          <tr><td><span class="badge A">A</span></td><td>来料不良反复</td><td>3×3=9</td><td>缺料/跳单的重要上游</td></tr>
+          <tr><td><span class="badge A">A</span></td><td>备料流程/交接不规范</td><td>3×5=15</td><td>部长亲抓的系统性问题</td></tr>
+          <tr><td><span class="badge B">B</span></td><td>模具异常（低频高影响）</td><td>1×5=5</td><td>单点暴雷，跨天4天</td></tr>
+          <tr><td><span class="badge B">B</span></td><td>供应商交付管理</td><td>2×3=6</td><td>高频小伤，反复</td></tr>
+          <tr><td><span class="badge B">B</span></td><td>设备故障</td><td>3×1=3</td><td>高频低单次影响</td></tr>
+          <tr><td><span class="badge B">B</span></td><td>物流在途</td><td>1×5=5</td><td>偶发但单次损失大</td></tr>
+          <tr><td><span class="badge C">C</span></td><td>计划变动（跳单/换型/滚动）</td><td>3×1=3</td><td>频繁但多为正常调整</td></tr>
+          <tr><td><span class="badge C">C</span></td><td>库存水位/呆滞报废</td><td>1×3=3</td><td>偶发，涉资金</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note" style="margin-top:12px"><b>结论</b>：A 类 3 个问题是停线和损失的主要来源。来料不良与备料流程是上游根因，缺料是下游结果，治上游两个，缺料会明显收敛。</div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="dot"></span>责任三层归属（A 类）</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>问题</th><th>直接责任（触发）</th><th>流程责任（环节没做到位）</th><th>管理责任（系统/规则）</th></tr></thead>
+        <tbody>
+          <tr><td>缺料/齐套</td><td>供应商未按时送</td><td>采购未前置跟进/预警；计划未提前释放订单</td><td>缺7天齐套前置管控；需求预测拍脑袋</td></tr>
+          <tr><td>来料不良</td><td>供应商来料品质差</td><td>品质/巡检未前置拦截；驻厂挑选不及时</td><td>供应商品质考核/驻厂管控缺失</td></tr>
+          <tr><td>备料流程不规范</td><td>备料员不足、值班仓管缺位、三方领料混乱</td><td>地刷备料流程未对标总装</td><td>部长亲抓的流程体系问题</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="dot"></span>问题传导链</h2>
+    <div class="flow">
+      <div class="chain">① 备料流程不规范 <span class="arrow">→</span> 备料不及时 <span class="arrow">→</span> 停线 <span class="arrow">→</span> 换型损失(2h/次)</div>
+      <div class="chain">② 来料不良 <span class="arrow">→</span> 返工/挑选 <span class="arrow">→</span> 缺料 <span class="arrow">→</span> 停线/跳单</div>
+      <div class="chain">③ 模具异常 <span class="arrow">→</span> 停产 <span class="arrow">→</span> 缺料 <span class="arrow">→</span> 交付风险 <span class="arrow">→</span> 跨天跟进</div>
+      <div class="chain">④ 供应商交付管理缺失(手写/包装差异) <span class="arrow">→</span> 账实差异 <span class="arrow">→</span> 少数 <span class="arrow">→</span> 停线</div>
+      <div class="chain">⑤ 计划滚动/跳单(m+2/m+3拍脑袋) <span class="arrow">→</span> 供应商拒备料 <span class="arrow">→</span> 缺料</div>
+    </div>
+    <div class="note" style="margin-top:12px"><b>核心洞察</b>：5 条链的终点几乎都落在停线/缺料，但根因全在上游的流程、供应商管理、计划预测。只在下游救火治标不治本。</div>
+  </section>
+
+  <section>
+    <h2><span class="dot"></span>6–8 月趋势背景</h2>
+    <div class="card">
+      <ul>
+        <li>6/1 入职，6–8 月只有「刚性执行-计划拉动群」单线，粒度是周计划/开班/排产/模具排查，月度文本量平稳（900~1100 条/月）。</li>
+        <li>高频词：计划、开班、上线、模具、来料不良、缺料（周级粒度）。</li>
+        <li>9 月新增 5 个现场群，日粒度的现场问题才集中暴露，备料流程、设备故障、供应商交付管理这些 6–8 月看不到。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="dot"></span>数据局限</h2>
+    <div class="card">
+      <ol>
+        <li>深度样本只有 5 天，6–8 月只有周级粒度，样本偏短。</li>
+        <li>量化数字来自群内口头报数，未与 MES/ERP 核对，可能有口径误差。</li>
+        <li>图片/语音未解码，损失部分现场信息。</li>
+        <li>责任归属为基于对话的推断，需与当事人核对。</li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="dot"></span>下一步</h2>
+    <div class="card">
+      <ol>
+        <li>把问题分类字典和评分规则固化为可复用模板，供每周复盘调用。</li>
+        <li>对接 MES/ERP 拉真实停线时长、产出达成、齐套率，替换口头数字。</li>
+        <li>对 A 类三条传导链做反事实推演，量化每个上游因素贡献。</li>
+        <li>每类问题沉淀 1–3 条可执行改善动作，形成工厂问题地图。</li>
+      </ol>
+    </div>
+  </section>
+
+  <footer>苏州工厂计划分析 · 数据来自微信工作群 · 仅供内部复盘使用</footer>
+</div>
+</body>
+</html>
